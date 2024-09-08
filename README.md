@@ -1,3 +1,4 @@
+[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/ltK0PwXf)
 # Завдання: Автоматизація тестування інтернет-магазину Sauce Demo
 
 **Ціль:** Написати автоматизовані тест-кейси для перевірки ключових функціональностей сайту Sauce Demo, використовуючи Selenium WebDriver, TestNG, Page Object Pattern, Cucumber для BDD сценаріїв, та Allure для звітності.
