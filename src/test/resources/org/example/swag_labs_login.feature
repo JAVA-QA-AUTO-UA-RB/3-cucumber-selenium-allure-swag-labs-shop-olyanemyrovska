@@ -1,14 +1,32 @@
 Feature: Swag Labs User Login
 
-  Scenario: Log in with correct credentials
-    Given I am somewhere
-    When I do something
-    Then something good has happened
-    And another expected thing has happened
-    But a thing we don't expect didn't happen
+  Scenario: Successful login with valid credentials
+    Given User is on the login page
+    When User logs in with valid username and password
+    Then User is redirected to the product page
 
-    # Перший сценарій дано як приклад
-    # Допишіть сюди свої сценарії як відповідають фічі, що зараз тестується (можуть бути як позитивні так і негативні)
-    # Приклади сценаріїв: логінізація з існуючим валідним користувачем, логінізація з кредами неіснуючого користувача,
-    # логінізація з кредами користувача, який є заблокованим (locked_out_user)
-  # Сюди має також увійти сценарії (вилогінювання/виходу/Log out) з сайту, бо ми маємо переконатися що при бажанні користувач може вийти
+  Scenario Outline: Login with incorrect credentials
+    Given User is on the login page
+    When User logs in with username "<username>" and password "<password>"
+    Then Error "<message>" is displayed
+
+    Examples:
+      | username        | password         | message                                                                   |
+      | unknown_user    | secret_sauce     | Epic sadface: Username and password do not match any user in this service |
+      | standard_user   | unknown_password | Epic sadface: Username and password do not match any user in this service |
+      | locked_out_user | secret_sauce     | Epic sadface: Sorry, this user has been locked out.                       |
+
+  Scenario Outline: Login with missing credentials
+    Given User is on the login page
+    When User logs in with username "<username>" and password "<password>"
+    Then Error "<message>" is displayed
+
+    Examples:
+      | username      | password | message                            |
+      |               |          | Epic sadface: Username is required |
+      | standard_user |          | Epic sadface: Password is required |
+
+  Scenario: User can successfully logout
+    Given User is logged in with valid credentials
+    When User clicks logout btn
+    Then User is redirected to the Login page

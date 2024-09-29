@@ -10,8 +10,6 @@ import static io.cucumber.junit.platform.engine.Constants.PLUGIN_PROPERTY_NAME;
 @Suite
 @IncludeEngines("cucumber")
 @SelectPackages("org.example")
-@ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty")
-// Цей раннер дістався проєкту з відповідного архетипу - за бажанням можете поміняти його на TestNG runner, або спробуйте інтегрувати
-// Cucumber + JUnit + Allure в існуючий проєкт
+@ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty, io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm")
 public class RunCucumberTest {
 }
