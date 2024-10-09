@@ -1,36 +1,67 @@
+
 package org.example.steps;
 
+import io.cucumber.java.Before;
 import io.cucumber.java.en.*;
+import org.example.pages.LoginPage;
+import org.example.pages.ProductsPage;
+import org.junit.jupiter.api.Assertions;
+import org.openqa.selenium.WebDriver;
+
+import static org.example.pages.LoginPage.LOGIN_PAGE_URI;
+import static org.example.pages.ProductsPage.PRODUCTS_PAGE_URI;
 
 public class SwagLabsLoginSteps {
+    private LoginPage loginPage;
+    private ProductsPage productsPage;
+    private WebDriver driver;
 
-    // Це приклад файлу з визначенням степів, вам треба буде допис  ати кроки сюди, а також, якщо потрібно,
-    // Створити подібні файли для інших сценаріїв
-    // Загальна структура проєкту залишається на ваш розсуд, проте бажано, щоб вона була чистою і логічною
-
-    // Перед початком роботи видаліть степдефінішни, які не є релевантними вашому проєкту, щоб вони не плуталися під ногами
-    @Given("I am somewhere")
-    public void iAmSomewhere() {
-
+    @Before
+    public void setUp() throws InterruptedException {
+        driver = helpers.WebDriverProvider.getDriver();
     }
 
-    @When("I do something")
-    public void iDoSomething() {
-
+    @Given("User is on the login page")
+    public void userIsOnTheLoginPage() {
+        loginPage = new LoginPage(driver);
     }
 
-    @Then("something good has happened")
-    public void somethingGoodHasHappened() {
-
+    @When("User logs in with username {string} and password {string}")
+    public void userLogsInWithUsernameAndPassword(String username, String password) {
+        loginPage.submitLoginForm(username, password);
     }
 
-    @And("another expected thing has happened")
-    public void anotherExpectedThingHasHappened() {
-
+    @When("User logs in with valid username and password")
+    public void userLogsInWithValidUsernameAndPassword() {
+        productsPage = loginPage.loginWithValidCredentials();
     }
 
-    @But("a thing we don{string}t happen")
-    public void aThingWeDonTExpectDidnTHappen() {
 
+    @Given("User is logged in with valid credentials")
+    public void userIsLoggedInWithValidCredentials() {
+        userIsOnTheLoginPage();
+        userLogsInWithValidUsernameAndPassword();
+    }
+
+    @Then("User is redirected to the product page")
+    public void userIsRedirectedToTheProductsPage() {
+        Assertions.assertEquals(PRODUCTS_PAGE_URI, driver.getCurrentUrl());
+        Assertions.assertEquals("Products", productsPage.getPageTitle());
+    }
+
+    @Then("Error {string} is displayed")
+    public void errorIsDisplayed(String message) {
+        Assertions.assertEquals(message, loginPage.getErrorMessage(), "Login error message does not match");
+    }
+
+    @When("User clicks logout btn")
+    public void userClicksLogoutBtn() {
+        productsPage.expandBurgerMenu().logout();
+    }
+
+    @Then("User is redirected to the Login page")
+    public void userIsRedirectedToTheLoginPage() {
+        Assertions.assertEquals(LOGIN_PAGE_URI, driver.getCurrentUrl());
+        Assertions.assertTrue(loginPage.isLoginPageDisplayed(), "Login page is not displayed after logout");
     }
 }
